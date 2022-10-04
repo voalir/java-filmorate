@@ -15,15 +15,17 @@ public class FilmController {
     HashMap<Integer, Film> films = new HashMap<>();
 
     @PostMapping
-    public Film addUser(@Valid @RequestBody Film film){
+    public Film addUser(@Valid @RequestBody Film film) {
         log.info("add film: " + film.toString());
+        Film.validate(film);
         films.put(film.getId(), film);
         return film;
     }
 
     @PutMapping
-    public Film updateUser(@Valid @RequestBody Film film){
+    public Film updateUser(@Valid @RequestBody Film film) {
         log.info("update film:  " + film.toString());
+        Film.validate(film);
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
             return film;
@@ -33,7 +35,7 @@ public class FilmController {
     }
 
     @GetMapping
-    public Collection<Film> getUsers(){
+    public Collection<Film> getUsers() {
         return films.values();
     }
 }

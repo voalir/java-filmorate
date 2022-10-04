@@ -14,6 +14,5 @@ public @interface AfterDate {
     String message() default "date is incorrect";
 
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
 }

@@ -18,6 +18,7 @@ public class UserController {
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
         log.info("add user: " + user.toString());
+        User.validate(user);
         users.put(user.getId(), user);
         return user;
     }
@@ -25,6 +26,7 @@ public class UserController {
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
         log.info("update user: " + user.toString());
+        User.validate(user);
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
             return user;

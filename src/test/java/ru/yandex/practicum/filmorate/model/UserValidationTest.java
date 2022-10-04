@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 
@@ -15,7 +16,7 @@ class UserValidationTest {
         user.setBirthday(birthDate);
         user.setLogin(login);
         user.setEmail(email);
-        if (User.validate(user)){
+        if (User.validate(user)) {
             return user;
         }
         return null;

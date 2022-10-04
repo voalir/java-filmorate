@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 
-import javax.validation.ValidationException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +17,7 @@ class FilmValidationTest {
         film.setReleaseDate(releaseDate);
         film.setDescription(description);
         film.setDuration(duration);
-        if (Film.validate(film)){
+        if (Film.validate(film)) {
             return film;
         }
         return null;
