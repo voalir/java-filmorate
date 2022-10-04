@@ -1,4 +1,4 @@
-package model;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 
@@ -7,13 +7,12 @@ import java.time.LocalDate;
 
 @Data
 public class User {
-    @NotNull
-    Integer id;//целочисленный идентификатор
+    Integer id = 1;//целочисленный идентификатор
     @Email
     String email;//электронная почта
     @NotBlank
     String login;//логин пользователя
-    String name;//имя для отображения
+    String name = "common";//имя для отображения
     @Past
     LocalDate birthday;// дата рождения
 }

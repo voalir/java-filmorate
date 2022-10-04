@@ -1,4 +1,4 @@
-package model;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import javax.validation.constraints.*;
@@ -7,13 +7,14 @@ import java.time.LocalDate;
 @Data
 public class Film {
     @NotNull
-    Integer id; //целочисленный идентификатор
-    @Size(max = 200)
+    Integer id = 1; //целочисленный идентификатор
+    @Size(min = 1)
     String name;//название
+    @Size(min = 1, max = 200)
     String description;//описание
     //TODO validate after date
     LocalDate releaseDate;//дата релиза
     @Positive
-    Duration duration;//продолжительность фильма
+    Long duration;//продолжительность фильма
 
 }

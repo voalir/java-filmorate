@@ -1,31 +1,38 @@
-package controller;
+package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import model.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashMap;
 
-@RestController(value = "/film")
+@RestController
+@RequestMapping("/films")
 @Slf4j
 public class FilmController {
     HashMap<Integer, Film> films = new HashMap<>();
 
-    @PostMapping(value = "/add")
+    @PostMapping
     public Film addUser(@Valid @RequestBody Film film){
+        log.info("add film: " + film.toString());
         films.put(film.getId(), film);
         return film;
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public Film updateUser(@Valid @RequestBody Film film){
-        films.put(film.getId(), film);
-        return film;
+        log.info("update film:  " + film.toString());
+        if (films.containsKey(film.getId())) {
+            films.put(film.getId(), film);
+            return film;
+        } else {
+            throw new RuntimeException("unknown film");
+        }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public Collection<Film> getUsers(){
         return films.values();
     }
