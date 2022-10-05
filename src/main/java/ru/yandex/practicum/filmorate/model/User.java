@@ -17,19 +17,4 @@ public class User {
     @Past
     private LocalDate birthday;// дата рождения
 
-    public static Boolean validate(User user) {
-        if (user.getId() < 0) {
-            throw new ValidationException("id less zero");
-        }
-        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            throw new ValidationException("email is incorrect");
-        }
-        if (user.getLogin().isBlank()) {
-            throw new ValidationException("login is blank");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("birthday in future");
-        }
-        return true;
-    }
 }
