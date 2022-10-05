@@ -9,15 +9,16 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    HashMap<Integer, Film> films = new HashMap<>();
+    Map<Integer, Film> films = new HashMap<>();
 
     @PostMapping
-    public Film addUser(@Valid @RequestBody Film film) {
+    public Film addFilm(@Valid @RequestBody Film film) {
         log.info("add film: " + film.toString());
         validate(film);
         films.put(film.getId(), film);
@@ -25,7 +26,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateUser(@Valid @RequestBody Film film) {
+    public Film updateFilm(@Valid @RequestBody Film film) {
         log.info("update film:  " + film.toString());
         validate(film);
         if (films.containsKey(film.getId())) {
@@ -37,7 +38,7 @@ public class FilmController {
     }
 
     @GetMapping
-    public Collection<Film> getUsers() {
+    public Collection<Film> getFilms() {
         return films.values();
     }
 

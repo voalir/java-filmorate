@@ -16,5 +16,4 @@ public class User {
     private String name = "common";//имя для отображения
     @Past
     private LocalDate birthday;// дата рождения
-
 }
