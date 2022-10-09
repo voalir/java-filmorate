@@ -1,25 +1,40 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.validator.AfterDate;
-
-import javax.validation.constraints.*;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
 public class Film {
-    @NotNull
-    Integer id = 1; //целочисленный идентификатор
+
+    /**
+     * целочисленный идентификатор
+     */
+    private Integer id = 1;
+
+    /**
+     * название
+     */
     @Size(min = 1)
-    String name;//название
+    private String name;
+
+    /**
+     * описание
+     */
     @Size(min = 1, max = 200)
-    String description;//описание
-    //TODO validate after date
+    private String description;
+
+    /**
+     * дата релиза
+     */
     @AfterDate
-    LocalDate releaseDate;//дата релиза
+    private LocalDate releaseDate;
+
+    /**
+     * продолжительность фильма
+     */
     @Positive
-    Long duration;//продолжительность фильма
-
-
+    private Long duration;
 }

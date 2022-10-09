@@ -1,15 +1,23 @@
 package ru.yandex.practicum.filmorate.model;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmValidationTest {
+
+    static Validator validator;
+
+    @BeforeAll
+    static void prepareValidator() {
+        validator = Validation.buildDefaultValidatorFactory().usingContext().getValidator();
+    }
 
     Film createFilm(Integer id, String name, LocalDate releaseDate, String description, Long duration) {
         Film film = new Film();
@@ -18,101 +26,78 @@ class FilmValidationTest {
         film.setReleaseDate(releaseDate);
         film.setDescription(description);
         film.setDuration(duration);
-        if (FilmController.validate(film)) {
-            return film;
-        }
-        return null;
+        return film;
     }
 
     @Test
     @DisplayName("Создать фильм - корректные данные")
     void createCorrectFilm() {
-        assertDoesNotThrow(() -> createFilm(10, "film", LocalDate.of(2000, 10, 10),
-                "good film", 110L));
-    }
 
-    @Test
-    @DisplayName("Создать фильм - отрицательный ид")
-    void createFilmIdLessZero() {
-        assertThrows(ValidationException.class, () -> createFilm(-10, "film", LocalDate.of(2000, 10, 10),
-                "good film", 110L));
-    }
-
-    @Test
-    @DisplayName("Создать фильм - id=0 ")
-    void createFilmIdZero() {
-        assertDoesNotThrow(() -> createFilm(0, "film", LocalDate.of(2000, 10, 10),
-                "good film", 110L));
-    }
-
-    @Test
-    @DisplayName("Создать фильм - id=1")
-    void createFilmIdOne() {
-        assertDoesNotThrow(() -> createFilm(1, "film", LocalDate.of(2000, 10, 10),
-                "good film", 110L));
+        assertEquals(0, validator.validate(createFilm(10, "film", LocalDate.of(2000, 10, 10),
+                "good film", 110L)).size());
     }
 
     @Test
     @DisplayName("Создать фильм - пустое имя")
     void createFilmNameIsBlank() {
-        assertThrows(ValidationException.class, () -> createFilm(10, "", LocalDate.of(2000, 10, 10),
-                "good film", 110L));
+        assertEquals(1, validator.validate(createFilm(1, "", LocalDate.of(2000, 10, 10),
+                "good film", 110L)).size());
     }
 
     @Test
     @DisplayName("Создать фильм - описание 199 символов")
     void createFilmDescription199() {
-        assertDoesNotThrow(() -> createFilm(10, "film", LocalDate.of(2000, 10, 10),
-                "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", 110L));
+        assertEquals(0, validator.validate(createFilm(10, "film", LocalDate.of(2000, 10, 10),
+                "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", 110L)).size());
     }
 
     @Test
     @DisplayName("Создать фильм - описание 200 символов")
     void createFilmDescription200() {
-        assertDoesNotThrow(() -> createFilm(10, "film", LocalDate.of(2000, 10, 10),
-                "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", 110L));
+        assertEquals(0, validator.validate(createFilm(10, "film", LocalDate.of(2000, 10, 10),
+                "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", 110L)).size());
     }
 
     @Test
     @DisplayName("Создать фильм - описание 201 символ")
     void createFilmDescription201() {
-        assertThrows(ValidationException.class, () -> createFilm(10, "film", LocalDate.of(2000, 10, 10),
-                "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", 110L));
+        assertEquals(1, validator.validate(createFilm(10, "film", LocalDate.of(2000, 10, 10),
+                "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", 110L)).size());
     }
 
     @Test
     @DisplayName("Создать фильм - релиз до 28.12.1895")
     void createFilmRealizeBefore28Dec1895() {
-        assertThrows(ValidationException.class, () -> createFilm(10, "film", LocalDate.of(1895, 11, 27),
-                "good film", 110L));
+        assertEquals(1, validator.validate(createFilm(10, "film", LocalDate.of(1895, 12, 27),
+                "good film", 110L)).size());
     }
 
     @Test
     @DisplayName("Создать фильм - релиз 28.12.1895")
     void createFilmRealizeEquals28Dec1895() {
-        assertDoesNotThrow(() -> createFilm(10, "film", LocalDate.of(1895, 11, 28),
-                "good film", 110L));
+        assertEquals(0, validator.validate(createFilm(10, "film", LocalDate.of(1895, 12, 28),
+                "good film", 110L)).size());
     }
 
     @Test
     @DisplayName("Создать фильм - релиз после 28.12.1895")
     void createFilmRealizeAfter28Dec1895() {
-        assertDoesNotThrow(() -> createFilm(10, "film", LocalDate.of(1895, 11, 29),
-                "good film", 110L));
+        assertEquals(0, validator.validate(createFilm(10, "film", LocalDate.of(1895, 12, 29),
+                "good film", 110L)).size());
     }
 
     @Test
     @DisplayName("Создать фильм - продолжительность нулевая")
     void createFilmDurationZero() {
-        assertDoesNotThrow(() -> createFilm(10, "film", LocalDate.of(2000, 10, 10),
-                "good film", 0L));
+        assertEquals(1, validator.validate(createFilm(10, "film", LocalDate.of(2000, 10, 10),
+                "good film", 0L)).size());
     }
 
     @Test
     @DisplayName("Создать фильм - продолжительность отрицательная")
     void createFilmDurationNegative() {
-        assertThrows(ValidationException.class, () -> createFilm(10, "film", LocalDate.of(2000, 10, 10),
-                "good film", -1L));
+        assertEquals(1, validator.validate(createFilm(10, "film", LocalDate.of(2000, 10, 10),
+                "good film", -1L)).size());
     }
 
 }
