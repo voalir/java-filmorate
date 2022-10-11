@@ -8,7 +8,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserValidationTest {
 
@@ -83,5 +83,47 @@ class UserValidationTest {
     void createUserNameIsBlank() {
         assertEquals(0, validator.validate(createUser(10, "", LocalDate.now(),
                 "nick", "index@inbox.org")).size());
+    }
+
+    @Test
+    @DisplayName("Создать пользователя - все значения = NULL")
+    void createUserAllValuesNull() {
+        assertEquals(2, validator.validate(createUser(1, null, null,
+                null, null)).size());
+    }
+
+    @Test
+    @DisplayName("Создать пользователя - id = NULL")
+    void createUserIdNull() {
+        assertEquals(0, validator.validate(createUser(null, "Nick", LocalDate.of(2000, 10, 10),
+                "nick", "index@inbox.org")).size());
+    }
+
+    @Test
+    @DisplayName("Создать пользователя - имя = NULL")
+    void createUserNameNull() {
+        assertEquals(0, validator.validate(createUser(1, null, LocalDate.of(2000, 10, 10),
+                "nick", "index@inbox.org")).size());
+    }
+
+    @Test
+    @DisplayName("Создать пользователя - дата рождения = NULL")
+    void createUserBirthdayNull() {
+        assertEquals(0, validator.validate(createUser(1, "Nick", null,
+                "nick", "index@inbox.org")).size());
+    }
+
+    @Test
+    @DisplayName("Создать пользователя - логин = NULL")
+    void createUserLoginNull() {
+        assertEquals(1, validator.validate(createUser(1, "Nick", LocalDate.of(2000, 10, 10),
+                null, "index@inbox.org")).size());
+    }
+
+    @Test
+    @DisplayName("Создать пользователя - почте = NULL")
+    void createUserEmailNull() {
+        assertEquals(1, validator.validate(createUser(1, "Nick", LocalDate.of(2000, 10, 10),
+                "nick", null)).size());
     }
 }

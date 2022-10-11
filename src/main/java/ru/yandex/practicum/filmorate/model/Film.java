@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import ru.yandex.practicum.filmorate.validator.AfterDate;
+
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ public class Film {
      * название
      */
     @Size(min = 1)
+    @NotNull
     private String name;
 
     /**
@@ -36,5 +39,6 @@ public class Film {
      * продолжительность фильма
      */
     @Positive
+    @NotNull
     private Long duration;
 }

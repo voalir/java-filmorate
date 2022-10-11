@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class FilmorateApplicationTests {
@@ -59,6 +59,8 @@ class FilmorateApplicationTests {
                 "nick", "index@inbox.org");
         User userNameIsBlank = createUser(100, "", LocalDate.of(2000, 10, 10),
                 "nick", "index@inbox.org");
+        User userNameIsNull = createUser(1000, null, LocalDate.of(2000, 10, 10),
+                "nick", "index@inbox.org");
 
         User addedUser = userController.addUser(user);
         assertEquals(1, userController.getUsers().size());
@@ -66,6 +68,9 @@ class FilmorateApplicationTests {
         User addedUserNameIsBlank = userController.addUser(userNameIsBlank);
         assertEquals(2, userController.getUsers().size());
         assertEquals(userNameIsBlank.getLogin(), addedUserNameIsBlank.getName());
+        User addedUserNameIsNull = userController.addUser(userNameIsNull);
+        assertEquals(3, userController.getUsers().size());
+        assertEquals(userNameIsNull.getLogin(), addedUserNameIsNull.getName());
         user.setName("new name");
         User updatedUser = userController.updateUser(user);
         assertEquals(user.getName(), updatedUser.getName());
