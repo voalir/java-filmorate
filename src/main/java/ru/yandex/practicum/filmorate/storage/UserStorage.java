@@ -13,4 +13,6 @@ public interface UserStorage {
     User modifyUser(User user);
 
     Collection<User> getUsers();
+
+    User getUser(Integer id);
 }

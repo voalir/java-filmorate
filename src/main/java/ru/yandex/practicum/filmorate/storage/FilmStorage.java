@@ -13,4 +13,6 @@ public interface FilmStorage {
     Film modifyFilm(Film film);
 
     Collection<Film> getFilms();
+
+    Film getFilm(int id);
 }
