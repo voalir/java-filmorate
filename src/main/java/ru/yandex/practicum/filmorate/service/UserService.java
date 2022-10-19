@@ -2,11 +2,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,14 +13,21 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+    private Integer lastIdentifier = 0;
+
     @Autowired
     UserStorage userStorage;
 
-    public User addUser(@Valid @RequestBody User user) {
+    private Integer getId() {
+        return ++lastIdentifier;
+    }
+
+    public User addUser(User user) {
+        user.setId(getId());
         return userStorage.addUser(user);
     }
 
-    public User updateUser(@Valid @RequestBody User user) {
+    public User updateUser(User user) {
         return userStorage.modifyUser(user);
     }
 
@@ -30,34 +35,21 @@ public class UserService {
         return userStorage.getUsers();
     }
 
-    public void deleteUser(User user) {
-        userStorage.removeUser(user);
-        //TODO delete him from friends
-    }
-
-    void addFriend(User userWho, User userWhom) {
-        userWhom.getFriends().add(userWho.getId());
-    }
-
-    void deleteFriend(User userWho, User userFrom) {
-        userFrom.getFriends().remove(userWho.getId());
-    }
-
-    Collection<User> commonUsers(User[] users) {
-        return null;//TODO implement method
-    }
-
     public void addFriend(int id, int friendId) {
         User user = userStorage.getUser(id);
-        if (userCanAddFriend(user, userStorage.getUser(friendId))) {
+        User friend = userStorage.getUser(friendId);
+        if (userCanAddFriend(user, friend)) {
             user.getFriends().add(friendId);
+            friend.getFriends().add(id);
         }
     }
 
     public void deleteFriend(int id, int friendId) {
         User user = userStorage.getUser(id);
-        if (userCanDeleteFriend(user, userStorage.getUser(friendId))) {
+        User friend = userStorage.getUser(friendId);
+        if (userCanDeleteFriend(user, friend)) {
             user.getFriends().remove(friendId);
+            friend.getFriends().remove(id);
         }
     }
 
@@ -86,5 +78,9 @@ public class UserService {
 
     boolean userCanDeleteFriend(User user, User friend) {
         return user.getFriends().contains(friend.getId());
+    }
+
+    public User getUserById(int id) {
+        return userStorage.getUser(id);
     }
 }

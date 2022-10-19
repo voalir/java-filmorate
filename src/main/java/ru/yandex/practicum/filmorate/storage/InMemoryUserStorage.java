@@ -15,7 +15,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
-        validateUserName(user);
+        processUserName(user);
         users.put(user.getId(), user);
         return user;
     }
@@ -25,18 +25,18 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(user.getId())) {
             users.remove(user.getId());
         } else {
-            throw new RuntimeException("unknown film");
+            throw new InvalidIdException("user with id=" + user.getId() + " not found");
         }
     }
 
     @Override
     public User modifyUser(User user) {
-        validateUserName(user);
+        processUserName(user);
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
             return user;
         } else {
-            throw new RuntimeException("unknown user");
+            throw new InvalidIdException("user with id=" + user.getId() + " not found");
         }
     }
 
@@ -53,7 +53,7 @@ public class InMemoryUserStorage implements UserStorage {
         return users.get(id);
     }
 
-    private static void validateUserName(User user) {
+    private static void processUserName(User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }

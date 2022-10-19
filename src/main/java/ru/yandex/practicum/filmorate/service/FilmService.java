@@ -13,12 +13,19 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
 
+    private Integer lastIdentifier = 0;
+
     @Autowired
     FilmStorage filmStorage;
     @Autowired
     UserStorage userStorage;
 
+    private Integer getId() {
+        return ++lastIdentifier;
+    }
+
     public Film addFilm(Film film) {
+        film.setId(getId());
         return filmStorage.addFilm(film);
     }
 
@@ -39,7 +46,8 @@ public class FilmService {
 
     public void deleteLike(int id, int userId) {
         Film film = filmStorage.getFilm(id);
-        if (userCanDeleteLike(film, userStorage.getUser(userId))) {
+        User user = userStorage.getUser(userId);
+        if (userCanDeleteLike(film, user)) {
             film.getLikes().remove(userId);
         }
     }
@@ -55,5 +63,9 @@ public class FilmService {
 
     boolean userCanDeleteLike(Film film, User user) {
         return film.getLikes().contains(user.getId());
+    }
+
+    public Film getFilmById(int id) {
+        return filmStorage.getFilm(id);
     }
 }

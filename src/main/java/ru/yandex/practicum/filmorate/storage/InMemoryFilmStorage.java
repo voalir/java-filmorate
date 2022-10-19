@@ -24,7 +24,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.containsKey(film.getId())) {
             films.remove(film.getId());
         } else {
-            throw new RuntimeException("unknown film");
+            throw new InvalidIdException("film with id=" + film.getId() + " not found");
         }
     }
 
@@ -34,7 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             films.put(film.getId(), film);
             return film;
         } else {
-            throw new RuntimeException("unknown film");
+            throw new InvalidIdException("film with id=" + film.getId() + " not found");
         }
     }
 

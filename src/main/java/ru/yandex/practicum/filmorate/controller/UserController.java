@@ -35,6 +35,11 @@ public class UserController {
         return userService.getUsers();
     }
 
+    @GetMapping(path = "/{id}")
+    public User getUser(@PathVariable int id) {
+        return userService.getUserById(id);
+    }
+
     @PutMapping(path = "{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info(String.format("add friend %s to user %s", friendId, id));
