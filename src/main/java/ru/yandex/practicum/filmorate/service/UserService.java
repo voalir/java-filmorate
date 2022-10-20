@@ -13,10 +13,14 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private Integer lastIdentifier = 0;
+    private final UserStorage userStorage;
+    private Integer lastIdentifier;
 
     @Autowired
-    UserStorage userStorage;
+    public UserService(UserStorage userStorage) {
+        lastIdentifier = 0;
+        this.userStorage = userStorage;
+    }
 
     private Integer getId() {
         return ++lastIdentifier;

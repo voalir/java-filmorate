@@ -14,8 +14,12 @@ import java.util.Collection;
 @Slf4j
 public class FilmController {
 
+    private final FilmService filmService;
+
     @Autowired
-    FilmService filmService;
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
 
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
