@@ -13,12 +13,16 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
 
-    private Integer lastIdentifier = 0;
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
+    private Integer lastIdentifier;
 
     @Autowired
-    FilmStorage filmStorage;
-    @Autowired
-    UserStorage userStorage;
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+        this.lastIdentifier = 0;
+        this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
+    }
 
     private Integer getId() {
         return ++lastIdentifier;
