@@ -26,46 +26,46 @@ public class FilmService {
 
     public Film addFilm(Film film) {
         film.setId(getId());
-        return filmStorage.addFilm(film);
+        return filmStorage.add(film);
     }
 
     public Film updateFilm(Film film) {
-        return filmStorage.modifyFilm(film);
+        return filmStorage.modify(film);
     }
 
     public Collection<Film> getFilms() {
-        return filmStorage.getFilms();
+        return filmStorage.getAll();
     }
 
     public void addLike(int id, int userId) {
-        Film film = filmStorage.getFilm(id);
-        if (userCanAddLike(film, userStorage.getUser(userId))) {
+        Film film = filmStorage.get(id);
+        if (userCanAddLike(film, userStorage.get(userId))) {
             film.getLikes().add(userId);
         }
     }
 
     public void deleteLike(int id, int userId) {
-        Film film = filmStorage.getFilm(id);
-        User user = userStorage.getUser(userId);
+        Film film = filmStorage.get(id);
+        User user = userStorage.get(userId);
         if (userCanDeleteLike(film, user)) {
             film.getLikes().remove(userId);
         }
     }
 
     public Collection<Film> getTopFilms(Integer count) {
-        return filmStorage.getFilms().stream().sorted((f1, f2) -> f2.getLikes().size() - f1.getLikes().size()).limit(count).
+        return filmStorage.getAll().stream().sorted((f1, f2) -> f2.getLikes().size() - f1.getLikes().size()).limit(count).
                 collect(Collectors.toList());
     }
 
-    boolean userCanAddLike(Film film, User user) {
+    private boolean userCanAddLike(Film film, User user) {
         return !film.getLikes().contains(user.getId());
     }
 
-    boolean userCanDeleteLike(Film film, User user) {
+    private boolean userCanDeleteLike(Film film, User user) {
         return film.getLikes().contains(user.getId());
     }
 
     public Film getFilmById(int id) {
-        return filmStorage.getFilm(id);
+        return filmStorage.get(id);
     }
 }

@@ -4,53 +4,34 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 @Component
-public class InMemoryUserStorage implements UserStorage {
-
-    private final Map<Integer, User> users = new HashMap<>();
+public class InMemoryUserStorage extends InMemoryObjectStorage<User> implements UserStorage {
 
     @Override
-    public User addUser(User user) {
+    public User add(User user) {
         processUserName(user);
-        users.put(user.getId(), user);
+        super.putObject(user.getId(), user);
         return user;
     }
 
     @Override
-    public void removeUser(User user) {
-        if (users.containsKey(user.getId())) {
-            users.remove(user.getId());
+    public void remove(User user) {
+        if (super.containsObjectKey(user.getId())) {
+            super.removeObject(user.getId());
         } else {
             throw new InvalidIdException("user with id=" + user.getId() + " not found");
         }
     }
 
     @Override
-    public User modifyUser(User user) {
+    public User modify(User user) {
         processUserName(user);
-        if (users.containsKey(user.getId())) {
-            users.put(user.getId(), user);
+        if (super.containsObjectKey(user.getId())) {
+            super.putObject(user.getId(), user);
             return user;
         } else {
             throw new InvalidIdException("user with id=" + user.getId() + " not found");
         }
-    }
-
-    @Override
-    public Collection<User> getUsers() {
-        return users.values();
-    }
-
-    @Override
-    public User getUser(Integer id) {
-        if (!users.containsKey(id)) {
-            throw new InvalidIdException("user with id=" + id + " not found");
-        }
-        return users.get(id);
     }
 
     private static void processUserName(User user) {

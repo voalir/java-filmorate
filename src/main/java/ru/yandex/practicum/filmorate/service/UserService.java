@@ -24,20 +24,20 @@ public class UserService {
 
     public User addUser(User user) {
         user.setId(getId());
-        return userStorage.addUser(user);
+        return userStorage.add(user);
     }
 
     public User updateUser(User user) {
-        return userStorage.modifyUser(user);
+        return userStorage.modify(user);
     }
 
     public Collection<User> getUsers() {
-        return userStorage.getUsers();
+        return userStorage.getAll();
     }
 
     public void addFriend(int id, int friendId) {
-        User user = userStorage.getUser(id);
-        User friend = userStorage.getUser(friendId);
+        User user = userStorage.get(id);
+        User friend = userStorage.get(friendId);
         if (userCanAddFriend(user, friend)) {
             user.getFriends().add(friendId);
             friend.getFriends().add(id);
@@ -45,8 +45,8 @@ public class UserService {
     }
 
     public void deleteFriend(int id, int friendId) {
-        User user = userStorage.getUser(id);
-        User friend = userStorage.getUser(friendId);
+        User user = userStorage.get(id);
+        User friend = userStorage.get(friendId);
         if (userCanDeleteFriend(user, friend)) {
             user.getFriends().remove(friendId);
             friend.getFriends().remove(id);
@@ -55,32 +55,32 @@ public class UserService {
 
     public Collection<User> getFriends(int id) {
         List<User> friends = new ArrayList<>();
-        for (Integer userId : userStorage.getUser(id).getFriends()) {
-            friends.add(userStorage.getUser(userId));
+        for (Integer userId : userStorage.get(id).getFriends()) {
+            friends.add(userStorage.get(userId));
         }
         return friends;
     }
 
-    public Collection<User> getCommonUsers(int id, int otherId) {
-        User otherUser = userStorage.getUser(otherId);
-        List<Integer> commonFriendIds = userStorage.getUser(id).getFriends().stream().filter((s) ->
+    public Collection<User> getCommonFriends(int userId, int otherId) {
+        User otherUser = userStorage.get(otherId);
+        List<Integer> commonFriendIds = userStorage.get(userId).getFriends().stream().filter((s) ->
                 otherUser.getFriends().contains(s)).collect(Collectors.toList());
         List<User> commonFriends = new ArrayList<>();
-        for (Integer userId : commonFriendIds) {
-            commonFriends.add(userStorage.getUser(userId));
+        for (Integer userIdFriend : commonFriendIds) {
+            commonFriends.add(userStorage.get(userIdFriend));
         }
         return commonFriends;
     }
 
-    boolean userCanAddFriend(User user, User friend) {
+    private boolean userCanAddFriend(User user, User friend) {
         return !user.getFriends().contains(friend.getId());
     }
 
-    boolean userCanDeleteFriend(User user, User friend) {
+    private boolean userCanDeleteFriend(User user, User friend) {
         return user.getFriends().contains(friend.getId());
     }
 
     public User getUserById(int id) {
-        return userStorage.getUser(id);
+        return userStorage.get(id);
     }
 }
