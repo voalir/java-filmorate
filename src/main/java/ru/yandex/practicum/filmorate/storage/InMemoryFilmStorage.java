@@ -1,10 +1,15 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 @Component
+@Primary
 public class InMemoryFilmStorage extends InMemoryObjectStorage<Film> implements FilmStorage {
 
     @Override
@@ -32,4 +37,9 @@ public class InMemoryFilmStorage extends InMemoryObjectStorage<Film> implements 
         }
     }
 
+    @Override
+    public Collection<Film> getPopular(Integer count) {
+        return super.getAll().stream().sorted((f1, f2) -> f2.getLikes().size() - f1.getLikes().size()).limit(count).
+                collect(Collectors.toList());
+    }
 }

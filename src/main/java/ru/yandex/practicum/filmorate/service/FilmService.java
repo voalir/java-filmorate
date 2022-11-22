@@ -1,28 +1,31 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.LikesStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
 
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
-    private Integer lastIdentifier;
+    @Autowired
+    @Qualifier("filmsInDatabase")
+    private FilmStorage filmStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
-        this.lastIdentifier = 0;
-        this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
-    }
+    @Qualifier("usersInDatabase")
+    private UserStorage userStorage;
+
+    @Autowired
+    private LikesStorage likesStorage;
+
+    private Integer lastIdentifier = 0;
 
     private Integer getId() {
         return ++lastIdentifier;
@@ -43,22 +46,18 @@ public class FilmService {
 
     public void addLike(int id, int userId) {
         Film film = filmStorage.get(id);
-        if (userCanAddLike(film, userStorage.get(userId))) {
-            film.getLikes().add(userId);
-        }
+        User user = userStorage.get(userId);
+        likesStorage.addLike(user.getId(), film.getId());
     }
 
     public void deleteLike(int id, int userId) {
         Film film = filmStorage.get(id);
         User user = userStorage.get(userId);
-        if (userCanDeleteLike(film, user)) {
-            film.getLikes().remove(userId);
-        }
+        likesStorage.deleteLike(user.getId(), film.getId());
     }
 
     public Collection<Film> getTopFilms(Integer count) {
-        return filmStorage.getAll().stream().sorted((f1, f2) -> f2.getLikes().size() - f1.getLikes().size()).limit(count).
-                collect(Collectors.toList());
+        return filmStorage.getPopular(count);
     }
 
     private boolean userCanAddLike(Film film, User user) {
