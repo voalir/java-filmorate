@@ -60,14 +60,6 @@ public class FilmService {
         return filmStorage.getPopular(count);
     }
 
-    private boolean userCanAddLike(Film film, User user) {
-        return !film.getLikes().contains(user.getId());
-    }
-
-    private boolean userCanDeleteLike(Film film, User user) {
-        return film.getLikes().contains(user.getId());
-    }
-
     public Film getFilmById(int id) {
         return filmStorage.get(id);
     }

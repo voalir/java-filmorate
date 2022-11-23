@@ -8,9 +8,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 public class Film {
@@ -47,13 +45,13 @@ public class Film {
     private Long duration;
 
     /**
-     * список пользователей, кто поставил лайк
+     * жанры
      */
-    @Deprecated
-    Set<Integer> likes = new HashSet<>();
-
     private List<Genre> genres = new ArrayList<>();
 
+    /**
+     * рейтинг Ассоциации кинокомпаний
+     */
     @NotNull
     private Mpa mpa;
 }
