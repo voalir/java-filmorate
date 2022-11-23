@@ -20,12 +20,12 @@ public class MpaController {
     MpaService mpaService;
 
     @GetMapping
-    public Collection<Mpa> getFilms() {
+    public Collection<Mpa> getMpas() {
         return mpaService.getMpas();
     }
 
     @GetMapping(path = "/{id}")
-    public Mpa getFilm(@PathVariable int id) {
+    public Mpa getMpa(@PathVariable int id) {
         return mpaService.getMpaById(id);
     }
 }

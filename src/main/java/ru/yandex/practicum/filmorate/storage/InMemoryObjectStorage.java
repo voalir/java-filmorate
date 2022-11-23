@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract public class InMemoryObjectStorage<T> implements ObjectStorage<T>{
+abstract public class InMemoryObjectStorage<T> implements ObjectStorage<T> {
 
     private final Map<Integer, T> objects = new HashMap<>();
 
@@ -33,15 +33,15 @@ abstract public class InMemoryObjectStorage<T> implements ObjectStorage<T>{
         return objects.get(id);
     }
 
-    protected void putObject(Integer id, T object){
+    protected void putObject(Integer id, T object) {
         objects.put(id, object);
     }
 
-    protected boolean containsObjectKey(Integer id){
+    protected boolean containsObjectKey(Integer id) {
         return objects.containsKey(id);
     }
 
-    protected void removeObject(Integer id){
+    protected void removeObject(Integer id) {
         objects.remove(id);
     }
 }

@@ -52,8 +52,8 @@ public class DaoTests {
     void testUserStorage() {
         User user1 = createUser(10, "Nick", LocalDate.of(2000, 10, 10),
                 "nick", "index@inbox.org");
-        User user2 = createUser(10, "Nick", LocalDate.of(2000, 10, 10),
-                "nick", "index@inbox.org");
+        User user2 = createUser(100, "NickName", LocalDate.of(2000, 10, 10),
+                "nickName", "indexNick@inbox.org");
         assertDoesNotThrow(() -> userDbStorage.getAll().size());
         int countUsersBeforeAdd = userDbStorage.getAll().size();
         assertDoesNotThrow(() -> userDbStorage.add(user1));
@@ -76,8 +76,8 @@ public class DaoTests {
     void testFilmStorage() {
         Film film1 = createFilm(null, "film1", LocalDate.of(2000, 10, 10),
                 "good film1", 110L);
-        Film film2 = createFilm(null, "film1", LocalDate.of(2000, 10, 10),
-                "good film2", 110L);
+        Film film2 = createFilm(0, "film2", LocalDate.of(2000, 10, 10),
+                "good film2", 120L);
         assertDoesNotThrow(() -> filmDbStorage.getAll().size());
         int countFilmsBeforeAdd = filmDbStorage.getAll().size();
         assertDoesNotThrow(() -> filmDbStorage.add(film1));

@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class FriendsPair {
-    private Integer FriendId;
     private Integer userId;
+    private Integer FriendId;
     private Boolean verify;
 }

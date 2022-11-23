@@ -4,6 +4,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
 
-public interface FilmStorage extends ObjectStorage<Film>{
+public interface FilmStorage extends ObjectStorage<Film> {
     Collection<Film> getPopular(Integer count);
 }
