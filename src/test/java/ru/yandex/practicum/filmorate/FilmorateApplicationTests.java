@@ -1,12 +1,16 @@
 package ru.yandex.practicum.filmorate;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -14,6 +18,8 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 class FilmorateApplicationTests {
 
     @Autowired
@@ -23,12 +29,18 @@ class FilmorateApplicationTests {
     FilmController filmController;
 
     Film createFilm(Integer id, String name, LocalDate releaseDate, String description, Long duration) {
+        Mpa mpa = new Mpa();
+        mpa.setId(1);
+        Genre genre = new Genre();
+        genre.setId(1);
         Film film = new Film();
         film.setId(id);
         film.setName(name);
         film.setReleaseDate(releaseDate);
         film.setDescription(description);
         film.setDuration(duration);
+        film.setMpa(mpa);
+        film.getGenres().add(genre);
         return film;
     }
 

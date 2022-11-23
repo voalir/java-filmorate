@@ -52,8 +52,8 @@ public class Film {
     @Deprecated
     Set<Integer> likes = new HashSet<>();
 
-    List<Genre> genres = new ArrayList<>();
+    private List<Genre> genres = new ArrayList<>();
 
     @NotNull
-    Mpa mpa;
+    private Mpa mpa;
 }
