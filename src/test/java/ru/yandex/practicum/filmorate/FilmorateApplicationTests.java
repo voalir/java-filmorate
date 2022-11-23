@@ -77,6 +77,7 @@ public class FilmorateApplicationTests {
         assertEquals(updatedFilm, filmController.getPopularFilms(10).iterator().next());
         assertThrows(InvalidIdException.class, () -> filmController.likeFilm(addedFilm.getId(), 9999));
         filmController.deleteLike(updatedFilm.getId(), user1.getId());
+        filmController.deleteLike(updatedFilm.getId(), user2.getId());
         assertDoesNotThrow(() -> filmController.deleteLike(addedFilm.getId(), user1.getId()));
         assertEquals(1, filmController.getPopularFilms(2).size());
         assertEquals(0, filmController.getPopularFilms(0).size());
