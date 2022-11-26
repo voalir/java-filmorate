@@ -53,5 +53,5 @@ public class Film {
      * рейтинг Ассоциации кинокомпаний
      */
     @NotNull
-    private Mpa mpa;
+    private MpaRating mpa;
 }

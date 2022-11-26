@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.LikesStorage;
+import ru.yandex.practicum.filmorate.storage.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
@@ -23,16 +23,9 @@ public class FilmService {
     private UserStorage userStorage;
 
     @Autowired
-    private LikesStorage likesStorage;
-
-    private Integer lastIdentifier = 0;
-
-    private Integer getId() {
-        return ++lastIdentifier;
-    }
+    private LikeStorage likeStorage;
 
     public Film addFilm(Film film) {
-        film.setId(getId());
         return filmStorage.add(film);
     }
 
@@ -47,13 +40,13 @@ public class FilmService {
     public void addLike(int id, int userId) {
         Film film = filmStorage.get(id);
         User user = userStorage.get(userId);
-        likesStorage.addLike(user.getId(), film.getId());
+        likeStorage.addLike(user.getId(), film.getId());
     }
 
     public void deleteLike(int id, int userId) {
         Film film = filmStorage.get(id);
         User user = userStorage.get(userId);
-        likesStorage.deleteLike(user.getId(), film.getId());
+        likeStorage.deleteLike(user.getId(), film.getId());
     }
 
     public Collection<Film> getTopFilms(Integer count) {

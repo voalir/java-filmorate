@@ -5,9 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.controller.GenreController;
-import ru.yandex.practicum.filmorate.controller.MpaController;
+import ru.yandex.practicum.filmorate.controller.MpaRatingController;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -29,7 +30,7 @@ public class FilmorateApplicationTests {
     FilmController filmController;
 
     @Autowired
-    MpaController mpaController;
+    MpaRatingController mpaRatingController;
 
     @Autowired
     GenreController genreController;
@@ -42,7 +43,7 @@ public class FilmorateApplicationTests {
         film.setReleaseDate(releaseDate);
         film.setDescription(description);
         film.setDuration(duration);
-        film.setMpa(mpaController.getMpa(1));
+        film.setMpa(mpaRatingController.getMpaRating(1));
         film.getGenres().add(genreController.getGenre(1));
         return film;
     }
@@ -73,7 +74,7 @@ public class FilmorateApplicationTests {
                 "nick", "index@inbox.org"));
         filmController.likeFilm(updatedFilm.getId(), user1.getId());
         filmController.likeFilm(updatedFilm.getId(), user2.getId());
-        filmController.likeFilm(updatedFilm.getId(), user2.getId());
+        assertThrows(DuplicateKeyException.class, () -> filmController.likeFilm(updatedFilm.getId(), user2.getId()));
         assertEquals(updatedFilm, filmController.getPopularFilms(10).iterator().next());
         assertThrows(InvalidIdException.class, () -> filmController.likeFilm(addedFilm.getId(), 9999));
         filmController.deleteLike(updatedFilm.getId(), user1.getId());
@@ -130,8 +131,8 @@ public class FilmorateApplicationTests {
 
     @Test
     void testMpaComtroller() {
-        assertDoesNotThrow(() -> mpaController.getMpas());
-        assertDoesNotThrow(() -> mpaController.getMpa(1));
+        assertDoesNotThrow(() -> mpaRatingController.getMpaRatings());
+        assertDoesNotThrow(() -> mpaRatingController.getMpaRating(1));
     }
 
 }

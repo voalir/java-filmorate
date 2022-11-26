@@ -6,4 +6,7 @@ import java.util.Collection;
 
 public interface UserStorage extends ObjectStorage<User> {
     Collection<User> getFriends(int id);
+
+    Collection<User> getCommonFriends(int userId, int otherId);
+
 }

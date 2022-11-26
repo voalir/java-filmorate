@@ -3,10 +3,10 @@ package ru.yandex.practicum.filmorate.storage.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.storage.LikesStorage;
+import ru.yandex.practicum.filmorate.storage.LikeStorage;
 
 @Component
-public class LikesDbStorage implements LikesStorage {
+public class LikeDbStorage implements LikeStorage {
 
     @Autowired
     JdbcTemplate jdbcTemplate;

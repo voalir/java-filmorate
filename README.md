@@ -18,5 +18,3 @@ select * from user
 
 Заявки в друзья пользователя:
 select friend_id from friend where user_id = ?
-union 
-select user_id from friend where friend_id = ?

@@ -1,4 +1,4 @@
 package ru.yandex.practicum.filmorate.model;
 
-public class Mpa extends Guide {
+public class MpaRating extends Guide {
 }
