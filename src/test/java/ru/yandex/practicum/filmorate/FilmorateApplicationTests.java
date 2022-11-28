@@ -66,6 +66,7 @@ public class FilmorateApplicationTests {
         assertEquals(1, filmController.getFilms().size());
         assertEquals(film, addedFilm);
         film.setDescription("new description");
+        film.getGenres().add(genreController.getGenre(2));
         Film updatedFilm = filmController.updateFilm(film);
         assertEquals(film, updatedFilm);
         User user1 = userController.addUser(createUser(null, "Nick1", LocalDate.of(2000, 10, 10),

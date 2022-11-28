@@ -4,17 +4,17 @@ Template repository for Filmorate project.
 ![ER -диаграмма таблиц хранилища](/filmorate-DB%20diagram.png)
 
 Таблицы:
-film - фильмы
-user - пользователи
-MPA - рейтинг Ассоциации кинокомпаний
-like - лайки фильма
-genre - справочник жанров
-film_genre - жанры фильма
-friend - друзья
+films - фильмы,
+users - пользователи,
+mpa_ratings - рейтинг Ассоциации кинокомпаний,
+likes - лайки фильма,
+genres - справочник жанров,
+film_genre - жанры фильма,
+friends - друзья
 
 Пример запроса
 Все пользователи:
-select * from user
+select * from users
 
 Заявки в друзья пользователя:
-select friend_id from friend where user_id = ?
+select friend_id from friends where user_id = ?

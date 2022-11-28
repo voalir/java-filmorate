@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Guide;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.service.GenreService;
-import ru.yandex.practicum.filmorate.service.MpaRatingService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
@@ -27,13 +26,14 @@ import java.util.stream.Collectors;
 @Component("filmsInDatabase")
 public class FilmDbStorage implements FilmStorage {
 
+    private static final String QUERY_SELECT_FILMS = "select films.*, mpa_ratings.name mpa_rating_name " +
+            "from films join mpa_ratings on films.mpa_rating_id = mpa_ratings.id";
+
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Autowired
     GenreService genreService;
-    @Autowired
-    MpaRatingService mpaRatingService;
 
     @Override
     public Film add(Film film) {
@@ -75,8 +75,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Collection<Film> getAll() {
-        String query = "select films.*, mpa_ratings.name mpa_rating_name from films join mpa_ratings on films.mpa_rating_id = mpa_ratings.id";
-        List<Film> films = new ArrayList<>(jdbcTemplate.query(query, getRowMapperFilms()));
+        List<Film> films = new ArrayList<>(jdbcTemplate.query(QUERY_SELECT_FILMS, getRowMapperFilms()));
         Map<Integer, List<Genre>> filmGenres = genreService.getFilmGenres();
         for (Film film : films) {
             film.setGenres(filmGenres.getOrDefault(film.getId(), new ArrayList<>()));
@@ -86,7 +85,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film get(int id) {
-        String query = "select films.*, mpa_ratings.name mpa_rating_name from films join mpa_ratings on films.mpa_rating_id = mpa_ratings.id where films.id = ?";
+        String query = QUERY_SELECT_FILMS + " where films.id = ?";
         List<Film> filmList = jdbcTemplate.query(query, getRowMapperFilms(), id);
         if (filmList.size() == 1) {
             Film film = filmList.get(0);

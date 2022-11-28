@@ -57,11 +57,10 @@ public class GenreDbStorage implements GenreStorage {
         List<FilmGenre> filmGenreList = jdbcTemplate.query(query, getRowMapperFilmGenres());
         Map<Integer, List<Genre>> filmGenres = new HashMap<>();
         for (FilmGenre filmGenre : filmGenreList) {
-            if (filmGenres.containsKey(filmGenre.getFilmId())) {
-                filmGenres.get(filmGenre.getFilmId()).add(filmGenre.getGenre());
-            } else {
-                filmGenres.put(filmGenre.getFilmId(), Collections.singletonList(filmGenre.getGenre()));
+            if (!filmGenres.containsKey(filmGenre.getFilmId())) {
+                filmGenres.put(filmGenre.getFilmId(), new ArrayList<>());
             }
+            filmGenres.get(filmGenre.getFilmId()).add(filmGenre.getGenre());
         }
         return filmGenres;
     }
@@ -74,11 +73,10 @@ public class GenreDbStorage implements GenreStorage {
         List<FilmGenre> filmGenreList = jdbcTemplate.query(query, getRowMapperFilmGenres(), count);
         Map<Integer, List<Genre>> filmGenres = new HashMap<>();
         for (FilmGenre filmGenre : filmGenreList) {
-            if (filmGenres.containsKey(filmGenre.getFilmId())) {
-                filmGenres.get(filmGenre.getFilmId()).add(filmGenre.getGenre());
-            } else {
-                filmGenres.put(filmGenre.getFilmId(), Collections.singletonList(filmGenre.getGenre()));
+            if (!filmGenres.containsKey(filmGenre.getFilmId())) {
+                filmGenres.put(filmGenre.getFilmId(), new ArrayList<>());
             }
+            filmGenres.get(filmGenre.getFilmId()).add(filmGenre.getGenre());
         }
         return filmGenres;
     }
