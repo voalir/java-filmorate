@@ -1,33 +1,27 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    private final UserStorage userStorage;
-    private Integer lastIdentifier;
+    @Autowired
+    @Qualifier("usersInDatabase")
+    private UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
-        lastIdentifier = 0;
-        this.userStorage = userStorage;
-    }
-
-    private Integer getId() {
-        return ++lastIdentifier;
-    }
+    private FriendStorage friendStorage;
 
     public User addUser(User user) {
-        user.setId(getId());
         return userStorage.add(user);
     }
 
@@ -40,48 +34,23 @@ public class UserService {
     }
 
     public void addFriend(int id, int friendId) {
-        User user = userStorage.get(id);
-        User friend = userStorage.get(friendId);
-        if (userCanAddFriend(user, friend)) {
-            user.getFriends().add(friendId);
-            friend.getFriends().add(id);
+        try {
+            friendStorage.addRequestToFriend(id, friendId);
+        } catch (DataIntegrityViolationException e) {
+            throw new InvalidIdException("user id invalid");
         }
     }
 
     public void deleteFriend(int id, int friendId) {
-        User user = userStorage.get(id);
-        User friend = userStorage.get(friendId);
-        if (userCanDeleteFriend(user, friend)) {
-            user.getFriends().remove(friendId);
-            friend.getFriends().remove(id);
-        }
+        friendStorage.deleteFriends(id, friendId);
     }
 
     public Collection<User> getFriends(int id) {
-        List<User> friends = new ArrayList<>();
-        for (Integer userId : userStorage.get(id).getFriends()) {
-            friends.add(userStorage.get(userId));
-        }
-        return friends;
+        return userStorage.getFriends(id);
     }
 
     public Collection<User> getCommonFriends(int userId, int otherId) {
-        User otherUser = userStorage.get(otherId);
-        List<Integer> commonFriendIds = userStorage.get(userId).getFriends().stream().filter((s) ->
-                otherUser.getFriends().contains(s)).collect(Collectors.toList());
-        List<User> commonFriends = new ArrayList<>();
-        for (Integer userIdFriend : commonFriendIds) {
-            commonFriends.add(userStorage.get(userIdFriend));
-        }
-        return commonFriends;
-    }
-
-    private boolean userCanAddFriend(User user, User friend) {
-        return !user.getFriends().contains(friend.getId());
-    }
-
-    private boolean userCanDeleteFriend(User user, User friend) {
-        return user.getFriends().contains(friend.getId());
+        return userStorage.getCommonFriends(userId, otherId);
     }
 
     public User getUserById(int id) {

@@ -26,6 +26,7 @@ class FilmValidationTest {
         film.setReleaseDate(releaseDate);
         film.setDescription(description);
         film.setDuration(duration);
+        film.setMpa(new MpaRating());
         return film;
     }
 
@@ -140,5 +141,15 @@ class FilmValidationTest {
     void createFilmDurationNull() {
         assertEquals(1, validator.validate(createFilm(10, "film", LocalDate.of(2000, 10, 10),
                 "good film", null)).size());
+    }
+
+    @Test
+    @DisplayName("Создать фильм - mpa rating = NULL")
+    void createFilmMpaRatingNull() {
+
+        Film film = createFilm(10, "film", LocalDate.of(2000, 10, 10),
+                "good film", 110L);
+        film.setMpa(null);
+        assertEquals(1, validator.validate(film).size());
     }
 }

@@ -7,8 +7,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class Film {
@@ -45,7 +45,13 @@ public class Film {
     private Long duration;
 
     /**
-     * список пользователей, кто поставил лайк
+     * жанры
      */
-    Set<Integer> likes = new HashSet<>();
+    private List<Genre> genres = new ArrayList<>();
+
+    /**
+     * рейтинг Ассоциации кинокомпаний
+     */
+    @NotNull
+    private MpaRating mpa;
 }
