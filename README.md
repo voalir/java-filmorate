@@ -1,5 +1,7 @@
 # java-filmorate
-Template repository for Filmorate project.
+
+Серверная часть приложения для работы с каталогом фильмов 
+
 
 ![ER -диаграмма таблиц хранилища](/filmorate-DB%20diagram.png)
 
